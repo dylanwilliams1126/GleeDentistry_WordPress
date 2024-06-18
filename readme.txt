@@ -1,4 +1,11 @@
-﻿WordPress Theme MedicalHospitalWebsite
+
+
+
+
+
+https://gleedentistry.com/
+
+WordPress Theme MedicalHospitalWebsite
 
 Тема WordPress сверстана на основе HTML5 шаблона MedicalHospitalWebsite https://github.com/frontend-coder/MedicalHospitalWebsite
 
