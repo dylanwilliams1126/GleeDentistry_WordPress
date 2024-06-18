@@ -1,1 +1,48 @@
-<?php/*Template Name: создать обычную страницу блогаTemplate Post Type: page*/ get_header(); ?> <?php get_template_part( 'template-parts/content-breadcrumb' ); ?><div class="container">  <div class="row">    <div class="page_content clearfix">      <div class="page_maincontent"><?php if (have_posts() ) : while ( have_posts() ) : the_post(); ?>        <article class="post">          <div class="post-thumb">          <?php the_post_thumbnail('post_thumb'); ?>          </div>          <div class="entry-header">            <h2><?php the_title();?></h2>            <div class="post-content">               <?php the_content(); ?>           </div>         </div><?php if (get_post_meta($post->ID, 'dell_usualpage', true ) !='off') : ?>   <div class="single_offfer">     <div class="single_offfer_pic">       <?php if (get_post_meta($post->ID, 'baner_usualpage', true )) : ?>        <img src="<?php echo get_post_meta($post->ID, 'baner_usualpage', true ); ?>" alt="это банер для продажи товара на странице: <?php the_title(); ?>">      <?php endif; ?>    </div>    <div class="single_offfer_text">      <?php if (get_post_meta($post->ID, 'usualpage_textarea', true )) : ?>        <?php echo get_post_meta($post->ID, 'usualpage_textarea', true ); ?>      <?php endif; ?>      <?php if (get_post_meta($post->ID, 'usualpage_link', true )) : ?>        <a href="<?php echo get_post_meta($post->ID, 'usualpage_link', true ); ?>" target="_blank">        <?php endif; ?>        <?php if (get_post_meta($post->ID, 'usualpage_ankor', true )) : ?>         <?php echo get_post_meta($post->ID, 'usualpage_ankor', true ); ?>       <?php endif; ?>     </a>   </div> </div><?php endif; ?>       </article><?php endwhile; ?><?php endif; ?>     </div>     <div id="sidebar" class="page_sidebarcontent">      <div class="widget">       <h2 class="footer_title">Быстрые ссылки</h2>       <div class="footer_links">        <ul>          <li class="fa-caret-right"><a href="#"> О нас</a></li>          <li><a href="#">Блог</a></li>          <li><a href="#">Наши контакты</a></li>          <li><a href="#">Вопросы-Ответы</a></li>          <li><a href="#">О нас</a></li>          <li><a href="#">Гарантии</a></li>        </ul>      </div>    </div>    <div class="widget">     <h2 class="footer_title">Наши услуги</h2>     <div class="footer_links">      <ul>        <li><a href="#">рбочие травмы</a></li>        <li><a href="#">спортивные травмы</a></li>        <li><a href="#">холодная лазераня терапия</a></li>        <li><a href="#">Вопросы-Ответы</a></li>        <li><a href="#">Массажная терапия</a></li>        <li><a href="#">Физеотерапия</a></li>        <li><a href="#">Химеотерапия</a></li>      </ul>    </div>  </div></div></div></div></div><?php get_footer(); ?>
+<?php get_header(); ?>
+
+<main id="mainContent" class="main-content">
+    <!-- Start Hero Area -->
+    <section class="section breadcrumb-area pt-100 pb-80" data-bg-img="assets/images/slider/01.jpg">
+        <div class="container t-center">
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1 col-xs-12 text-center">
+                    <div class="section-top-title">
+                        <h1 class="t-uppercase font-45">404</h1>
+                        <ol class="breadcrumb">
+                            <li><a href="index.html"><i class="fa fa-home mr-10"></i>Home</a></li>
+                            <li class="active">404</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Hero Area -->
+
+    <!-- Start 404 Area  -->
+    <section class="section error-404-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 t-center t-md-left pt-60">
+                    <div class="not-found-content">
+                        <h1 class="mb-20">404</h1>
+                        <h2 class="t-uppercase mb-30">Oops! Page Not Found</h2>
+                        <p class="color-mid mb-15">Oopps! We can’t seems to find the page you are looking for.</p>
+                        <p class="color-mid mb-15">It may be temporarily unavailable, moved or no longer exist.</p>
+                        <p class="color-mid mb-40">Check the URL you entered for any mistakes and try again.</p>
+                        <a href="index.html" class="btn btn-lg">Back To Home</a>
+                    </div>
+                </div>
+                <div class="col-md-5 pt-40">
+                    <img src="<?php echo THEME_PATH;?>assets/images/404.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End 404 Area  -->
+
+
+</main>
+
+<?php get_footer(); ?>
+

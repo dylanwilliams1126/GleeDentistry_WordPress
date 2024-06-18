@@ -1,97 +1,190 @@
 <?php
 /**
+ * The template for displaying comments
+ *
+ * The area of the page that contains both current comments
+ * and the comment form.
+ *
  * @package WordPress
- * @subpackage Default_Theme
+ * @subpackage Marco
+ * @since Marco 1.0
  */
 
-// Do not delete these lines
-	if (!empty($_SERVER['SCRIPT_FILENAME']) && 'comments.php' == basename($_SERVER['SCRIPT_FILENAME']))
-		die ('Please do not load this page directly. Thanks!');
+/*
+ * If the current post is protected by a password and
+ * the visitor has not yet entered the password we will
+ * return early without loading the comments.
+ */
+if ( post_password_required() ) {
+    return;
+}
 
-	if ( post_password_required() ) { ?>
-		<p class="nocomments"><?php _e( 'Эта статья защищена паролем. Введите пароль, чтобы посмотреть комментарии.', 'medhosp' ); ?></p>
 
-	<?php
-		return;
-	}
+$args = array(
+    'order' => 'DESC',
+    'status' => 'approve',
+    'number' => '5',
+    'parent' => 0
+);
+$comments = get_comments($args);
 ?>
 
-<!-- You can start editing here. -->
+<div id="comments" class="comments-area">
+    <?php if (have_comments()): ?>
+        <div class="comments mt-40">
+            <h3 class="h-title mb-30">Comments (<?php echo comments_number();?>)</h3>
+            <?php foreach ($comments as $comment): ?>
+                <div class="comment" id="comment-<?php echo $comment->comment_ID;?>">
+                    <div class="comment-wrapper">
+                        <div class="comment-avatar">
+                            <img src="<?php echo get_avatar_url($comment->comment_author_email,array()) ?>" alt="avatar user">
+                        </div>
+                        <div class="comment-meta">
+                            <a href="#" class="mr-20"><i class="fa fa-clock-o mr-5"></i> <?php echo date('M j, Y',strtotime($comment->comment_date));?></a>
+                            <a href="#" class="reply-comment" data-author="<?php echo $comment->comment_author;?>" data-parent="<?php echo $comment->comment_ID;?>"><i class="fa fa-comments mr-5"></i>Reply</a>
+                        </div>
+                        <div class="comment-content">
+                            <h5 class="mb-15 color-theme"><?php echo $comment->comment_author;?></h5>
+                            <p><?php echo $comment->comment_content;?></p>
+                        </div>
+                    </div>
+                    <?php
+                    $args = array(
+                        'status' => 'approve',
+                        'number' => '5',
+                        'post_id' => $comment->comment_post_ID,
+                        'parent' => $comment->comment_ID
+                    );
+                    $replies = get_comments($args);
+                    ?>
+                    <div class="comment-replys">
+                    <?php foreach ($replies as $reply): ?>
+                        <div class="comment" id="comment-<?php echo $reply->comment_ID;?>">
+                            <div class="comment-wrapper">
+                                <div class="comment-avatar">
+                                    <img src="<?php echo get_avatar_url($reply->comment_author_email,array()) ?>" alt="avatar user">
+                                </div>
+                                <div class="comment-meta">
+                                    <a href="#" class="mr-20"><i class="fa fa-clock-o mr-5"></i> <?php echo date('M j, Y',strtotime($reply->comment_date));?></a>
+                                    <a href="#" class="reply-comment" data-author="<?php echo $comment->comment_author;?>" data-parent="<?php echo $comment->comment_ID;?>"><i class="fa fa-comments mr-5"></i>Reply</a>
+                                </div>
+                                <div class="comment-content">
+                                    <h5 class="mb-15 color-theme"><?php echo $reply->comment_author;?></h5>
+                                    <p><?php echo $reply->comment_content;?></p>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
 
-<?php if ( have_comments()) : ?>
+            <div class="leave-reply-comment mt-40">
+                <div class="reply-comment-wrap">
+                    <h3 class="h-title mb-30">Leave A Reply <span class="reply-author"></span></h3>
+                    <form action="<?php echo site_url('/wp-comments-post.php')?>" method="post" id="commentForm" class="comment-form">
+                        <div class="row row-10">
+                            <?php if (!is_user_logged_in()): ?>
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="comment-form-author form-group">
+                                        <label for="author">Name <span class="required">*</span></label>
+                                        <input id="author" class="form-control" name="author" type="text" value="" required='required' />
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="comment-form-email form-group">
+                                        <label for="email">Email <span class="required">*</span></label>
+                                        <input id="email" class="form-control" name="email" type="email" value="" required='required' />
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="comment-form-url form-group">
+                                        <label for="url">Website</label>
+                                        <input id="url" class="form-control" name="url" type="url" value="" />
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            <div class="col-xs-12">
+                                <div class="comment-form-comment form-group">
+                                    <label for="comment">Comment</label>
+                                    <textarea id="comment" class="form-control" name="comment" cols="45" rows="4" required="required"></textarea>
+                                </div>
+                            </div>
+                            <?php if (!is_user_logged_in()): ?>
+                                <div class="col-xs-1">
+                                    <div class="comment-form-query form-group">
+                                        <label for="comment-query" class="field-label">4 x 4 = </label>
+                                        <input id="comment-query" class="form-control" name="query-result" required="required"/>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            <div class="col-xs-12">
+                                <div class="form-submit">
+                                    <input name="submit" type="submit" id="submit" class="btn" value="Post Comment" />
+                                </div>
+                                <input type="hidden" name="comment_post_ID" value="<?php echo get_the_ID()?>" id="comment_post_ID">
+                                <input type="hidden" name="comment_parent" id="comment_parent" value="0">
+                                <input type="hidden" id="_wp_unfiltered_html_comment_disabled" name="_wp_unfiltered_html_comment" value="70754f57d7"><script>(function(){if(window===window.parent){document.getElementById('_wp_unfiltered_html_comment_disabled').name='_wp_unfiltered_html_comment';}})();</script>
+                                <!--                    --><?php //marco_comment_form_hidden_fields(); ?>
 
+                            </div>
+                        </div>
+                    </form>
+                    <i class="fa fa-times-circle-o close-form-reply"></i>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 
+    <div class="leave-comment mt-40">
+        <h3 class="h-title mb-30">Leave A Comment</h3>
+        <form action="<?php echo site_url('/wp-comments-post.php')?>" method="post" id="commentForm" class="comment-form">
+            <div class="row row-10">
+                <?php if (!is_user_logged_in()): ?>
+                <div class="col-md-4 col-sm-6">
+                    <div class="comment-form-author form-group">
+                        <label for="author">Name <span class="required">*</span></label>
+                        <input id="author" class="form-control" name="author" type="text" value="" required='required' />
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="comment-form-email form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input id="email" class="form-control" name="email" type="email" value="" required='required' />
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <div class="comment-form-url form-group">
+                        <label for="url">Website</label>
+                        <input id="url" class="form-control" name="url" type="url" value="" />
+                    </div>
+                </div>
+                <?php endif; ?>
+                <div class="col-xs-12">
+                    <div class="comment-form-comment form-group">
+                        <label for="comment">Comment</label>
+                        <textarea id="comment" class="form-control" name="comment" cols="45" rows="4" required="required"></textarea>
+                    </div>
+                </div>
+                <?php if (!is_user_logged_in()): ?>
+                    <div class="col-xs-1">
+                        <div class="comment-form-query form-group">
+                            <label for="comment-query" class="field-label">4 x 4 = </label>
+                            <input id="comment-query" class="form-control" name="query-result" required="required"/>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                <div class="col-xs-12">
+                    <div class="form-submit">
+                        <input name="submit" type="submit" id="submit" class="btn" value="Post Comment" />
+                    </div>
+                    <input type="hidden" name="comment_post_ID" value="<?php echo get_the_ID()?>" id="comment_post_ID">
+                    <input type="hidden" name="comment_parent" id="comment_parent" value="0">
+                    <input type="hidden" id="_wp_unfiltered_html_comment_disabled" name="_wp_unfiltered_html_comment" value="70754f57d7"><script>(function(){if(window===window.parent){document.getElementById('_wp_unfiltered_html_comment_disabled').name='_wp_unfiltered_html_comment';}})();</script>
+<!--                    --><?php //marco_comment_form_hidden_fields(); ?>
 
-<div class="comments-title" style="float:right;"><?php comments_number( __( 'Нет комментариев', 'medhosp' ),  __( 'Один комментарий', 'medhosp' ), __( '% Комментариев', 'medhosp' ) );?> </div>
-<div style="clear:both"></div>
-	<ol class="commentlist" itemscope="" itemtype="http://schema.org/UserComments">
-	<?php wp_list_comments( array(
-			'reply_text' => __( 'Ответить', 'medhosp' ),
-			'callback' => 'inspiration_comment'
-		)); ?>
-	</ol>
-	<div class="navigation">
-		<div class="alignleftcom"><?php previous_comments_link() ?></div>
-		<div class="alignrightcom"><?php next_comments_link() ?></div>
-	</div>
- <?php else : // this is displayed if there are no comments so far ?>
-
-	<?php if ('open' == $post->comment_status) : ?>
-		<!-- If comments are open, but there are no comments. -->
-
-	 <?php else : // comments are closed ?>
-		<!-- If comments are closed. -->
-	<?php endif; ?>
-<?php endif; ?>
-<?php if ('open' == $post->comment_status) : ?>
-<div id="respond">
-	<div id="postcomment" class="comments-title"><?php comment_form_title( __( 'Оставьте свой комментарий или вопрос', 'inspiration' ), __( 'Оставьте комментарий к %s', 'inspiration' ) ); ?></div>
-<div class="cancel-comment-reply">
-	<small><?php cancel_comment_reply_link(); ?></small>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
-<?php if ( get_option('comment_registration') && !$user_ID ) : ?>
-<p class="logged-in"><?php _e( 'Вы должны', 'medhosp' ); ?> <a href="<?php echo get_option('siteurl'); ?>/wp-login.php?redirect_to=<?php echo urlencode(get_permalink()); ?>"><?php _e( 'войти', 'medhosp' ); ?>  </a> <?php _e( 'чтобы комментировать статью.', 'medhosp' ); ?>
-</p>
-<?php else : ?>
-
-<form action="<?php echo get_option('siteurl'); ?>/wp-comments-post.php" method="post" id="commentform">
-<?php if ( $user_ID ) : ?>
-<p class="logged-in"><?php _e( 'Вы вошли как', 'medhosp' ); ?> <a href="<?php echo get_option('siteurl'); ?>/wp-admin/profile.php"><?php echo $user_identity; ?></a>. <a href="<?php echo wp_logout_url(get_permalink()); ?>" title="<?php _e( 'Выйти из этого аккаунта', 'medhosp' ); ?>"><?php _e( 'Выйти', 'medhosp' ); ?> &raquo;</a></p>
-<?php else : ?>
-
-
-<div>
-<label class="comment-field" for="author"><small><?php _e( 'Имя', 'medhosp' ); ?> <?php if ($req) echo __( '(обязательно)', 'medhosp' ); ?></small></label>
-	<input class="commenting_input" type="text" name="author" id="author"  value="<?php echo $comment_author; ?>" tabindex="1" <?php if ($req) echo "aria-required='true'"; ?> />
-</div>
-
-<div>
-<label for="email" class="comment-field"><small><?php _e( 'Емаил (не будет опубликован)', 'medhosp' ); ?> <?php if ($req) echo __( '(обязательно)', 'medhosp' ); ?></small></label>
-<input class="commenting_input" type="text" name="email" id="email" value="<?php echo $comment_author_email; ?>" tabindex="2" <?php if ($req) echo "aria-required='true'"; ?> />
-</div>
-
-<div>
-<label class="comment-field" for="url"><small><?php _e( 'Адрес Вашего сайта', 'medhosp' ); ?></small></label>
-<input class="commenting_input" type="text" name="url" id="url" value="<?php echo $comment_author_url; ?>" tabindex="3" />
-</div>
-
-<?php endif; ?>
-<div>
-
-<div>
-	<label for="comment" class="comment-field">Комментарий</label><textarea class="commenting_textarea" name="comment" id="comment" rows="4" tabindex="4" ></textarea></div>
-</div>
-
-<div>
-	<input class="header_button" name="submit" type="submit" id="submit" tabindex="5" value="<?php _e( 'Добавить комментарий', 'medhosp' ); ?>" />
-<?php comment_id_fields(); ?>
-</div>
-
-<?php do_action('comment_form', $post->ID); ?>
-
-</form>
-
-<?php endif; // If registration required and not logged in ?>
-</div>
-
-<?php endif; // if you delete this the sky will fall on your head ?>
