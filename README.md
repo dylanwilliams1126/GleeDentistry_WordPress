@@ -6,7 +6,6 @@ This is a [wordpress](https://wordpress.org/) project.
 
 ![star this repo](https://img.shields.io/github/stars/react-native-webview/react-native-webview?style=flat-square)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![NPM Version](https://img.shields.io/npm/v/react-native-webview.svg?style=flat-square)](https://www.npmjs.com/package/react-native-webview)
 ![Npm Downloads](https://img.shields.io/npm/dm/react-native-webview.svg)
 
 ## Overview
@@ -17,7 +16,7 @@ This is a [wordpress](https://wordpress.org/) project.
 
 Welcome to my project! Below are my favorite screenshots related to this project:
 
-<img src="https://github.com/codecrafts1128/GleeDentistry_WordPress/blob/master/screens/1.png" width="250" alt="Screen 1" hspace="5"> <img src="https://github.com/codecrafts1128/GleeDentistry_WordPress/blob/master/screens/2.png" width="250" alt="Screen 5" hspace="5"> <img src="https://github.com/codecrafts1128/GleeDentistry_WordPress/blob/master/screens/3.png" width="250" alt="Screen 4" hspace="5">
+<img src="https://github.com/dylanwilliams1126/GleeDentistry_WordPress/blob/master/screens/1.png" width="250" alt="Screen 1" hspace="5"> <img src="https://github.com/dylanwilliams1126/GleeDentistry_WordPress/blob/master/screens/2.png" width="250" alt="Screen 5" hspace="5"> <img src="https://github.com/dylanwilliams1126/GleeDentistry_WordPress/blob/master/screens/3.png" width="250" alt="Screen 4" hspace="5">
 
 ## Contributors
 
@@ -35,4 +34,4 @@ Welcome to my project! Below are my favorite screenshots related to this project
 
 ## License
 
-GleeDentistry is licensed under [The MIT License](LICENSE) © Silas Jones 2022-
+GleeDentistry is licensed under [The MIT License](LICENSE) © Dylan Williams 2022-
